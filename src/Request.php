@@ -12,41 +12,59 @@ class Request
 {
     private Client $client;
 
+    private array $options = [];
+
     public function __construct(
         private readonly string $url,
         private readonly array $header = []
     ) {
+        $this->init();
+    }
+
+    private function init(): void
+    {
         $this->client = new Client([
             'base_uri' => $this->url,
             'timeout'  => 5.0,
         ]);
+
+        $this->options = [
+            RequestOptions::HEADERS => $this->header
+        ];
     }
 
-    private function options(array $options): array
+    public function setProxy(Proxie $proxie): void
     {
-        return [
-            [RequestOptions::HEADERS => $this->header],
-            $options
+        $this->options += [
+            RequestOptions::PROXY => [
+                'http' => $proxie->getUrl(),
+                'https' => $proxie->getUrl(),
+            ]
         ];
+    }
+
+    private function getOptions(array $options): array
+    {
+        return $this->options + $options;
     }
 
     public function get(string $uri = '', array $options = []): ResponseInterface
     {
-        return $this->client->request('GET', $uri, $this->options($options));
+        return $this->client->request('GET', $uri, $this->getOptions($options));
     }
 
     public function post(string $uri = '', array $options = []): ResponseInterface
     {
-        return $this->client->request('POST', $uri, $this->options($options));
+        return $this->client->request('POST', $uri, $this->getOptions($options));
     }
 
     public function delete(string $uri = '', array $options = []): ResponseInterface
     {
-        return $this->client->request('DELETE', $uri, $this->options($options));
+        return $this->client->request('DELETE', $uri, $this->getOptions($options));
     }
 
     public function put(string $uri = '', array $options = []): ResponseInterface
     {
-        return $this->client->request('PUT', $uri, $this->options($options));
+        return $this->client->request('PUT', $uri, $this->getOptions($options));
     }
 }
