@@ -1,0 +1,24 @@
+{
+    "name": "fjr-software/flinkbot-request",
+    "description": "Flinkbot - request component",
+    "version": "1.0.0",
+    "type": "library",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Francisco Júnior",
+            "email": "franciscojr.dev@gmail.com",
+            "homepage": "https://fjrsoftware.com/",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "FjrSoftware\\Flinkbot\\Request\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^8.2",
+        "guzzlehttp/guzzle": "^7.8"
+    }
+}
