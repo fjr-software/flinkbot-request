@@ -11,12 +11,27 @@ use Psr\Http\Message\ResponseInterface;
 
 class Request
 {
+    /**
+     * @var Client
+     */
     private Client $client;
 
+    /**
+     * @var array
+     */
     private array $options = [];
 
+    /**
+     * @var Closure
+     */
     private Closure $callback;
 
+    /**
+     * Constructor
+     *
+     * @param string $url
+     * @param array $header
+     */
     public function __construct(
         private readonly string $url,
         private readonly array $header = []
@@ -24,11 +39,16 @@ class Request
         $this->init();
     }
 
+    /**
+     * Initialize
+     *
+     * @return void
+     */
     private function init(): void
     {
         $this->client = new Client([
             'base_uri' => $this->url,
-            'timeout'  => 5.0,
+            'timeout'  => 5
         ]);
 
         $this->options = [
@@ -36,6 +56,12 @@ class Request
         ];
     }
 
+    /**
+     * Set proxy
+     *
+     * @param Proxie $proxie
+     * @return void
+     */
     public function setProxy(Proxie $proxie): void
     {
         $this->options += [
@@ -46,16 +72,34 @@ class Request
         ];
     }
 
+    /**
+     * Get options
+     *
+     * @param array $options
+     * @return array
+     */
     private function getOptions(array $options): array
     {
         return $this->options + $options;
     }
 
+    /**
+     * Set callback request
+     *
+     * @param Closure $callback
+     * @return void
+     */
     public function setCallbackRequest(callable $callback): void
     {
         $this->callback = $callback;
     }
 
+    /**
+     * Callback request
+     *
+     * @param ResponseInterface $response
+     * @return ResponseInterface
+     */
     private function callbackRequest(ResponseInterface $response): ResponseInterface
     {
         if ($this->callback) {
@@ -65,6 +109,13 @@ class Request
         return $response;
     }
 
+    /**
+     * Get
+     *
+     * @param string $uri
+     * @param array $options
+     * @return ResponseInterface
+     */
     public function get(string $uri = '', array $options = []): ResponseInterface
     {
         return $this->callbackRequest(
@@ -72,6 +123,13 @@ class Request
         );
     }
 
+    /**
+     * Post
+     *
+     * @param string $uri
+     * @param array $options
+     * @return ResponseInterface
+     */
     public function post(string $uri = '', array $options = []): ResponseInterface
     {
         return $this->callbackRequest(
@@ -79,6 +137,13 @@ class Request
         );
     }
 
+    /**
+     * Delete
+     *
+     * @param string $uri
+     * @param array $options
+     * @return ResponseInterface
+     */
     public function delete(string $uri = '', array $options = []): ResponseInterface
     {
         return $this->callbackRequest(
@@ -86,6 +151,13 @@ class Request
         );
     }
 
+    /**
+     * Put
+     *
+     * @param string $uri
+     * @param array $options
+     * @return ResponseInterface
+     */
     public function put(string $uri = '', array $options = []): ResponseInterface
     {
         return $this->callbackRequest(
