@@ -12,9 +12,9 @@ use Psr\Http\Message\ResponseInterface;
 class Request
 {
     /**
-     * @var Client
+     * @var Client|null
      */
-    private Client $client;
+    private ?Client $client = null;
 
     /**
      * @var array
@@ -22,9 +22,9 @@ class Request
     private array $options = [];
 
     /**
-     * @var Closure
+     * @var Closure|null
      */
-    private Closure $callback;
+    private ?Closure $callback = null;
 
     /**
      * Constructor
@@ -48,7 +48,7 @@ class Request
     {
         $this->client = new Client([
             'base_uri' => $this->url,
-            'timeout'  => 5
+            'timeout'  => 5,
         ]);
 
         $this->options = [
@@ -84,9 +84,9 @@ class Request
     }
 
     /**
-     * Set callback request
+     * Set callback
      *
-     * @param Closure $callback
+     * @param callable $callback
      * @return void
      */
     public function setCallbackRequest(callable $callback): void
