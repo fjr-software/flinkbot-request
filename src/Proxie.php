@@ -7,6 +7,11 @@ namespace FjrSoftware\Flinkbot\Request;
 class Proxie
 {
     /**
+     * @var object
+     */
+    private ?object $model;
+
+    /**
      * Constructor
      *
      * @param string $host
@@ -37,5 +42,16 @@ class Proxie
             $url['host'],
             $url['port']
         );
+    }
+
+    /**
+     * Set model
+     *
+     * @param object|null $model
+     * @return void
+     */
+    public function setModel(?object $model): void
+    {
+        $this->model = $model;
     }
 }
