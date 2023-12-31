@@ -54,4 +54,14 @@ class Proxie
     {
         $this->model = $model;
     }
+
+    /**
+     * Get model
+     *
+     * @return object|null
+     */
+    public function getModel(): ?object
+    {
+        return $this->model;
+    }
 }
