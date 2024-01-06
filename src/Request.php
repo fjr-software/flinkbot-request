@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace FjrSoftware\Flinkbot\Request;
 
 use Closure;
+use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\ResponseInterface;
 
@@ -115,11 +117,12 @@ class Request
      * @param string $uri
      * @param array $options
      * @return ResponseInterface
+     * @throws Exception
      */
     public function get(string $uri = '', array $options = []): ResponseInterface
     {
         return $this->callbackRequest(
-            $this->client->request('GET', $uri, $this->getOptions($options))
+            $this->handleException('GET', $uri, $this->getOptions($options))
         );
     }
 
@@ -129,11 +132,12 @@ class Request
      * @param string $uri
      * @param array $options
      * @return ResponseInterface
+     * @throws Exception
      */
     public function post(string $uri = '', array $options = []): ResponseInterface
     {
         return $this->callbackRequest(
-            $this->client->request('POST', $uri, $this->getOptions($options))
+            $this->handleException('POST', $uri, $this->getOptions($options))
         );
     }
 
@@ -143,11 +147,12 @@ class Request
      * @param string $uri
      * @param array $options
      * @return ResponseInterface
+     * @throws Exception
      */
     public function delete(string $uri = '', array $options = []): ResponseInterface
     {
         return $this->callbackRequest(
-            $this->client->request('DELETE', $uri, $this->getOptions($options))
+            $this->handleException('DELETE', $uri, $this->getOptions($options))
         );
     }
 
@@ -157,11 +162,36 @@ class Request
      * @param string $uri
      * @param array $options
      * @return ResponseInterface
+     * @throws Exception
      */
     public function put(string $uri = '', array $options = []): ResponseInterface
     {
         return $this->callbackRequest(
-            $this->client->request('PUT', $uri, $this->getOptions($options))
+            $this->handleException('PUT', $uri, $this->getOptions($options))
         );
+    }
+
+    /**
+     * Handle exception
+     *
+     * @param string $method
+     * @param string $uri
+     * @param array $options
+     * @return ResponseInterface
+     * @throws Exception
+     */
+    private function handleException(string $method, string $uri = '', array $options = []): ResponseInterface
+    {
+        try {
+            $this->client->request($method, $uri, $this->getOptions($options));
+        } catch (ClientException $e) {
+            $response = $e->getResponse();
+
+            if ($response->getStatusCode() === 400) {
+                return $response;
+            }
+
+            throw new Exception($e->getMessage());
+        }
     }
 }
