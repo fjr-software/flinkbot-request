@@ -48,7 +48,7 @@ class Request
     {
         $this->client = new Client([
             'base_uri' => $this->url,
-            'timeout'  => 5,
+            'timeout'  => 1.5,
         ]);
 
         $this->options = [
