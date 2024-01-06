@@ -183,7 +183,7 @@ class Request
     private function handleException(string $method, string $uri = '', array $options = []): ResponseInterface
     {
         try {
-            $this->client->request($method, $uri, $this->getOptions($options));
+            return $this->client->request($method, $uri, $this->getOptions($options));
         } catch (ClientException $e) {
             $response = $e->getResponse();
 
