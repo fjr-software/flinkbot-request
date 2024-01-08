@@ -33,10 +33,12 @@ class Request
      *
      * @param string $url
      * @param array $header
+     * @param int $timeout
      */
     public function __construct(
         private readonly string $url,
-        private readonly array $header = []
+        private readonly array $header = [],
+        private readonly int $timeout = 5
     ) {
         $this->init();
     }
@@ -50,7 +52,7 @@ class Request
     {
         $this->client = new Client([
             'base_uri' => $this->url,
-            'timeout'  => 5,
+            'timeout'  => $this->timeout,
         ]);
 
         $this->options = [
