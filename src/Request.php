@@ -84,7 +84,7 @@ class Request
      */
     private function getOptions(array $options): array
     {
-        return $this->options + $options;
+        return array_merge_recursive($this->options, $options);
     }
 
     /**
